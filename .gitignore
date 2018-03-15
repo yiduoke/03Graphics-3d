@@ -1,3 +1,9 @@
+ignore
+#graphics
+*.ppm
+*.png
+main
+
 # Prerequisites
 *.d
 
