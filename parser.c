@@ -11,44 +11,44 @@
 
 
 /*======== void parse_file () ==========
-Inputs:   char * filename 
-          struct matrix * transform, 
+Inputs:   char * filename
+          struct matrix * transform,
           struct matrix * pm,
           screen s
-Returns: 
+Returns:
 
 Goes through the file named filename and performs all of the actions listed in that file.
 The file follows the following format:
      Every command is a single character that takes up a line
      Any command that requires arguments must have those arguments in the second line.
      The commands are as follows:
-         sphere: add a sphere to the edge matrix - 
+         sphere: add a sphere to the edge matrix -
 	    takes 4 arguemnts (cx, cy, cz, r)
-         torus: add a torus to the edge matrix - 
+         torus: add a torus to the edge matrix -
 	    takes 5 arguemnts (cx, cy, cz, r1, r2)
-         box: add a rectangular prism to the edge matrix - 
-	    takes 6 arguemnts (x, y, z, width, height, depth)	    
+         box: add a rectangular prism to the edge matrix -
+	    takes 6 arguemnts (x, y, z, width, height, depth)
 
-	 circle: add a circle to the edge matrix - 
+	 circle: add a circle to the edge matrix -
 	    takes 4 arguments (cx, cy, cz, r)
-	    
+
 	 hermite: add a hermite curve to the edge matrix -
 	    takes 8 arguments (x0, y0, x1, y1, rx0, ry0, rx1, ry1)
 	 bezier: add a bezier curve to the edge matrix -
 	    takes 8 arguments (x0, y0, x1, y1, x2, y2, x3, y3)
-         line: add a line to the edge matrix - 
+         line: add a line to the edge matrix -
 	    takes 6 arguemnts (x0, y0, z0, x1, y1, z1)
-	 ident: set the transform matrix to the identity matrix - 
-	 scale: create a scale matrix, 
-	    then multiply the transform matrix by the scale matrix - 
+	 ident: set the transform matrix to the identity matrix -
+	 scale: create a scale matrix,
+	    then multiply the transform matrix by the scale matrix -
 	    takes 3 arguments (sx, sy, sz)
-	 translate: create a translation matrix, 
-	    then multiply the transform matrix by the translation matrix - 
+	 translate: create a translation matrix,
+	    then multiply the transform matrix by the translation matrix -
 	    takes 3 arguments (tx, ty, tz)
 	 rotate: create a rotation matrix,
 	    then multiply the transform matrix by the rotation matrix -
 	    takes 2 arguments (axis, theta) axis should be x, y or z
-	 apply: apply the current transformation matrix to the 
+	 apply: apply the current transformation matrix to the
 	    edge matrix
 	 display: draw the lines of the edge matrix to the screen
 	    display the screen
@@ -65,28 +65,28 @@ humans use degrees, so the file will contain degrees for rotations,
 be sure to conver those degrees to radians (M_PI is the constant
 for PI)
 ====================*/
-void parse_file ( char * filename, 
-                  struct matrix * transform, 
+void parse_file ( char * filename,
+                  struct matrix * transform,
                   struct matrix * edges,
                   screen s) {
                     char state[40];
-                    
+
                       color c;
                       c.red = 230;
                       c.green = 130;
                       c.blue = 50;
-                    
+
                       strcpy(state, "nothing");
-                    
+
                       FILE *f;
                       char line[256];
                       clear_screen(s);
-                    
+
                       if ( strcmp(filename, "stdin") == 0 )
                         f = stdin;
                       else
                         f = fopen(filename, "r");
-                    
+
                       while ( fgets(line, 255, f) != NULL ) {
                         line[strlen(line)-1]='\0';
                         printf(":%s:\n",line);
@@ -124,7 +124,7 @@ void parse_file ( char * filename,
                         else if(!strncmp(line, "torus", 5)){
                           strcpy(state, "torus");
                         }
-                    
+
                         // now no argument commands
                         else if(!strncmp(line, "ident", 5)){
                           ident(transform);
@@ -146,72 +146,72 @@ void parse_file ( char * filename,
                         // now carrying out the commands
                         else{
                           if(!strncmp(state, "line", 4)){
-                    
+
                             int x0, y0, z0, x1, y1, z1;
                             sscanf( line, "%d %d %d %d %d %d", &x0, &y0, &z0, &x1, &y1, &z1 );
                             add_edge(edges, x0, y0, z0, x1, y1, z1);
                             strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "scale", 5)){
-                    
+
                             float x, y, z;
                             sscanf( line, "%f %f %f", &x, &y, &z);
                             matrix_mult(make_scale(x, y, z), transform);
                             strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "translate", 9)){
-                    
+
                             int x, y, z;
                             sscanf( line, "%d %d %d", &x, &y, &z);
                             matrix_mult(make_translate(x, y, z), transform);
                             strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "circle", 6)){
-                    
+
                                     float cx, cy, cz, r;
                                     sscanf( line, "%f %f %f %f", &cx, &cy, &cz, &r);
                                     add_circle(edges, cx, cy, cz, r, 0.002);
                                     strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "hermite", 7)){
-                    
+
                                     float px0, py0, px1, py1, rx0, ry0, rx1, ry1;
                                     sscanf( line, "%f %f %f %f %f %f %f %f", &px0, &py0, &px1, &py1, &rx0, &ry0, &rx1, &ry1);
                                     add_curve(edges, px0, py0, px1, py1, rx0, ry0, rx1, ry1, 0.002, 0);
                                     strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "bezier", 6)){
-                    
+
                                     float px0, py0, px1, py1, rx0, ry0, rx1, ry1;
                                     sscanf( line, "%f %f %f %f %f %f %f %f", &px0, &py0, &px1, &py1, &rx0, &ry0, &rx1, &ry1);
                                     add_curve(edges, px0, py0, px1, py1, rx0, ry0, rx1, ry1, 0.002, 1);
                                     strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "box", 3)){
-                            
+
                                             float x, y, z, w, h, d;
                                             sscanf( line, "%f %f %f %f %f %f", &x, &y, &z, &w, &h, &d);
                                             add_box(edges, x, y, z, w, h, d);
                                             strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "sphere", 6)){
-                            float x, y, z, r, step;
-                            sscanf( line, "%f %f %f %f %f", &x, &y, &z, &r, &step);
-                            add_sphere(edges, x, y, z, r, step);
+                            float x, y, z, r;
+                            sscanf( line, "%f %f %f %f", &x, &y, &z, &r);
+                            add_sphere(edges, x, y, z, r, 200);
                             strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "torus", 5)){
-                            float x, y, z, r1, r2, step;
-                            sscanf( line, "%f %f %f %f %f %f", &x, &y, &z, &r1, &r2, &step);
-                            add_torus(edges, x, y, z, r1, r2, step);
+                            float x, y, z, r1, r2;
+                            sscanf( line, "%f %f %f %f %f", &x, &y, &z, &r1, &r2);
+                            add_torus(edges, x, y, z, r1, r2, 200);
                             strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "rotate", 6)){
-                    
+
                             char axis[1];
                             int theta;
                             sscanf( line, "%s %d", axis, &theta);
-                    
+
                             if (!strncmp(axis, "x", 1)){
                               matrix_mult(make_rotX(theta), transform);
                             }
@@ -224,7 +224,7 @@ void parse_file ( char * filename,
                             strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "save", 4)){
-                    
+
                             char file[100];
                             sscanf( line, "%s", file);
                             display(s);
@@ -234,4 +234,3 @@ void parse_file ( char * filename,
                         }
                       }
 }
-  
