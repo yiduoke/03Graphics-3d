@@ -67,7 +67,6 @@ void add_sphere( struct matrix * edges,
                    for (i = 0; i < ballpoints->lastcol; i++){
                      add_edge(edges, ballpoints->m[0][i], ballpoints->m[1][i], ballpoints->m[2][i], ballpoints->m[0][i] +1, ballpoints->m[1][i], ballpoints->m[2][i]);
                    }
-                   print_matrix(ballpoints);
 }
 
 /*======== void generate_sphere() ==========
@@ -84,11 +83,11 @@ void add_sphere( struct matrix * edges,
   ====================*/
 struct matrix * generate_sphere(double cx, double cy, double cz,
                                 double r, int step ) {
-                                  struct matrix* ballpoints = new_matrix(4, step*step + 1);
+                                  struct matrix* ballpoints = new_matrix(4, step*step);
                                   int phi, theta;
                                   double phi_t, theta_t;
 
-                                  for (phi = 1; phi <= step + 1; phi++){
+                                  for (phi = 1; phi <= step; phi++){
                                     phi_t = (double)phi/step;
                                     for (theta = 1; theta <= step/2; theta++){
                                       theta_t = (double)theta/step;
@@ -98,8 +97,7 @@ struct matrix * generate_sphere(double cx, double cy, double cz,
                                       ballpoints->m[3][phi * step + theta] = 0;
                                     }
                                   }
-                                  ballpoints->lastcol = step * step + 1;
-                                  printf("lastcol: %d\n", ballpoints->lastcol);
+                                  ballpoints->lastcol = step * step;
   return ballpoints;
 }
 
