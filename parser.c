@@ -72,9 +72,9 @@ void parse_file ( char * filename,
                     char state[40];
 
                       color c;
-                      c.red = 230;
-                      c.green = 130;
-                      c.blue = 50;
+                      c.red = 255;
+                      c.green = 255;
+                      c.blue = 255;
 
                       strcpy(state, "nothing");
 
@@ -181,18 +181,16 @@ void parse_file ( char * filename,
                                     strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "bezier", 6)){
-
-                                    float px0, py0, px1, py1, rx0, ry0, rx1, ry1;
-                                    sscanf( line, "%f %f %f %f %f %f %f %f", &px0, &py0, &px1, &py1, &rx0, &ry0, &rx1, &ry1);
-                                    add_curve(edges, px0, py0, px1, py1, rx0, ry0, rx1, ry1, 0.002, 1);
-                                    strcpy(state, "nothing");
+                            float px0, py0, px1, py1, rx0, ry0, rx1, ry1;
+                            sscanf( line, "%f %f %f %f %f %f %f %f", &px0, &py0, &px1, &py1, &rx0, &ry0, &rx1, &ry1);
+                            add_curve(edges, px0, py0, px1, py1, rx0, ry0, rx1, ry1, 0.002, 1);
+                            strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "box", 3)){
-
-                                            float x, y, z, w, h, d;
-                                            sscanf( line, "%f %f %f %f %f %f", &x, &y, &z, &w, &h, &d);
-                                            add_box(edges, x, y, z, w, h, d);
-                                            strcpy(state, "nothing");
+                            float x, y, z, w, h, d;
+                            sscanf( line, "%f %f %f %f %f %f", &x, &y, &z, &w, &h, &d);
+                            add_box(edges, x, y, z, w, h, d);
+                            strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "sphere", 6)){
                             float x, y, z, r;

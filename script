@@ -9,7 +9,6 @@ y 20
 move
 150 200 0
 apply
-
 display
 #clear the edge matrix, test the sphere
 clear
