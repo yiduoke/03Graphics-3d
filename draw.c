@@ -86,21 +86,25 @@ void add_sphere( struct matrix * edges,
   ====================*/
 struct matrix * generate_sphere(double cx, double cy, double cz,
                                 double r, int step ) {
-                                  struct matrix* ballpoints = new_matrix(4, step*step+step);
+                                  struct matrix* ballpoints = new_matrix(4, (step+1) * (step+1));
                                   int phi, theta;
+                                  int index = 0;
                                   double phi_t, theta_t;
 
                                   for (phi = 0; phi <= step; phi++){
                                     phi_t = (double)phi/step;
-                                    for (theta = 0; theta <= step/2; theta++){
+                                    for (theta = 0; theta <= step; theta++){
                                       theta_t = (double)theta/step;
-                                      ballpoints->m[0][phi * step + theta] = r * cos(2 * M_PI * theta_t) + cx;
-                                      ballpoints->m[1][phi * step + theta] = r * sin(2 * M_PI * theta_t) * cos(2 * M_PI * phi_t) + cy;
-                                      ballpoints->m[2][phi * step + theta] = r * sin(2 * M_PI * theta_t) * sin(2 * M_PI * phi_t) + cz;
-                                      ballpoints->m[3][phi * step + theta] = 0;
+                                      ballpoints->m[0][index] = r * cos(1 * M_PI * theta_t) + cx;
+                                      ballpoints->m[1][index] = r * sin(1 * M_PI * theta_t) * cos(2 * M_PI * phi_t) + cy;
+                                      ballpoints->m[2][index] = r * sin(1 * M_PI * theta_t) * sin(2 * M_PI * phi_t) + cz;
+                                      ballpoints->m[3][index] = 0;
+
+                                      index++;
                                     }
                                   }
-                                  ballpoints->lastcol = step * step+step;
+                                  // ballpoints->lastcol = (step+1) * (step+1);
+                                  ballpoints->lastcol = index;
   return ballpoints;
 }
 
@@ -127,7 +131,7 @@ void add_torus( struct matrix * edges,
                   // I made r1 the big R in generate torus oops so that's why I'm plugging it in reverse here
                   struct matrix* donut = generate_torus(cx, cy, cz, r2, r1, step);
                   for (i = 0; i < donut->lastcol; i++){
-                    add_edge(edges, donut->m[0][i], donut->m[1][i], donut->m[2][i], donut->m[0][i] +1, donut->m[1][i], donut->m[2][i]);
+                    add_edge(edges, donut->m[0][i], donut->m[1][i], donut->m[2][i], donut->m[0][i] + 1, donut->m[1][i], donut->m[2][i]);
                   }
 }
 
@@ -145,21 +149,24 @@ void add_torus( struct matrix * edges,
   ====================*/
 struct matrix * generate_torus( double cx, double cy, double cz,
                                 double r1, double r2, int step ) {
-                                  struct matrix* donut = new_matrix(4, step * step + step);
+                                  struct matrix* donut = new_matrix(4, (step+1) * (step+1));
                                   int phi, theta;
+                                  int index = 0;
                                   double phi_t, theta_t;
 
                                   for (phi = 0; phi <= step; phi++){
                                     phi_t = (double)phi/step;
                                     for (theta = 0; theta <= step; theta++){
                                       theta_t = (double)theta/step;
-                                      donut->m[0][phi * step + theta] = cos(2 * M_PI * phi_t) * (r2 * cos(2 * M_PI * theta_t) + r1) + cx;
-                                      donut->m[1][phi * step + theta] = r2 * sin(2 * M_PI * theta_t) + cy;
-                                      donut->m[2][phi * step + theta] = -1 * sin(2 * M_PI * phi_t) * (r2 * cos(2 * M_PI * theta_t) + r1 ) + cz;
-                                      donut->m[3][phi * step + theta] = 0;
+                                      donut->m[0][index] = cos(2 * M_PI * phi_t) * (r2 * cos(2 * M_PI * theta_t) + r1) + cx;
+                                      donut->m[1][index] = r2 * sin(2 * M_PI * theta_t) + cy;
+                                      donut->m[2][index] = -1 * sin(2 * M_PI * phi_t) * (r2 * cos(2 * M_PI * theta_t) + r1 ) + cz;
+                                      donut->m[3][index] = 0;
+
+                                      index++;
                                     }
                                   }
-                                  donut->lastcol = step * step + step;
+                                  donut->lastcol = index;
 
 
   return donut;

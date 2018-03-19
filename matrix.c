@@ -241,6 +241,7 @@ void ident(struct matrix *m) {
 
 void clear_matrix(struct matrix *m){
   m->lastcol = 0;
+  m->cols = 0;
 }
 /*-------------- void scalar_mult() --------------
 Inputs:  double x

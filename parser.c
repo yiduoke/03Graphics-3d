@@ -131,9 +131,9 @@ void parse_file ( char * filename,
                         }
                         else if(!strncmp(line, "apply", 5)){
                           matrix_mult(transform, edges);
-                          clear_screen(s);
                         }
                         else if(!strncmp(line, "display", 7)){
+                          clear_screen(s);
                           draw_lines(edges, s, c);
                           display(s);
                         }
@@ -195,13 +195,13 @@ void parse_file ( char * filename,
                           else if(!strncmp(state, "sphere", 6)){
                             float x, y, z, r;
                             sscanf( line, "%f %f %f %f", &x, &y, &z, &r);
-                            add_sphere(edges, x, y, z, r, 200);
+                            add_sphere(edges, x, y, z, r, 50);
                             strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "torus", 5)){
                             float x, y, z, r1, r2;
                             sscanf( line, "%f %f %f %f %f", &x, &y, &z, &r1, &r2);
-                            add_torus(edges, x, y, z, r1, r2, 200);
+                            add_torus(edges, x, y, z, r1, r2, 50);
                             strcpy(state, "nothing");
                           }
                           else if(!strncmp(state, "rotate", 6)){
